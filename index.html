@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація та Аутентифікація</title>
+    <style>
+        /*
+        Оновлена Колірна Палітра (Полунична/Ніжна):
+        - Фон: Градієнт від ніжно-рожевого до персикового.
+        - Акцент: #FF4081 (Малиновий/Полуничний)
+        - Кнопки: Градієнт рожевого та червоного.
+        */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Ніжний полуничний фон */
+            background: linear-gradient(135deg, #ffc3a0 0%, #ffafbd 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.96);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(255, 175, 189, 0.4);
+            max-width: 550px;
+            width: 100%;
+            border: 1px solid #ffe0e6;
+        }
+
+        h1 {
+            text-align: center;
+            color: #d81b60;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ffe0e6;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #d81b60;
+            border-bottom-color: #d81b60;
+        }
+
+        .tab:hover {
+            color: #ec407a;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: #fffafa;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ff80ab;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(255, 128, 171, 0.1);
+        }
+
+        .error {
+            color: #F44336;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        input.invalid {
+            border-color: #ffcdd2;
+            background-color: #ffebee;
+        }
+
+        input.valid {
+            border-color: #a5d6a7; 
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            /* Полуничний градієнт */
+            background: linear-gradient(135deg, #ec407a 0%, #d81b60 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef5350 0%, #c62828 100%);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.2);
+        }
+
+        .btn-gray {
+            background: linear-gradient(135deg, #bdbdbd 0%, #9e9e9e 100%);
+            box-shadow: none;
+            color: white;
+            margin-top: 5px;
+        }
+        
+        .btn-link {
+            background: none;
+            color: #ec407a;
+            box-shadow: none;
+            padding: 5px;
+            margin-top: 5px;
+            font-size: 14px;
+            text-decoration: underline;
+            width: auto;
+            display: inline-block;
+        }
+        
+        .btn-link:hover {
+            transform: none;
+            color: #d81b60;
+            background: none;
+            box-shadow: none;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ffe0e6;
+        }
+
+        .divider span {
+            background: #fff;
+            padding: 0 15px;
+            position: relative;
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .test-credentials {
+            background: #fff5f8;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-size: 13px;
+            border: 1px solid #ffe0e6;
+        }
+
+        .test-credentials strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #d81b60;
+        }
+
+        .test-credentials p {
+            margin: 3px 0;
+            color: #666;
+        }
+
+        .authenticated-section {
+            text-align: center;
+        }
+        
+        .edit-profile-section {
+            background: #fdf2f5;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: left;
+            border: 1px solid #f8bbd0;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .token-info {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .token-info h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .token-display {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 11px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .timer-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .timer-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e91e63;
+        }
+
+        /* Стилі для логів */
+        .logs-container {
+            max-height: 350px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid #eee;
+        }
+
+        .log-entry {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 11px;
+            word-break: break-all;
+            border-left: 4px solid transparent;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .log-entry.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left-color: #ef5350;
+        }
+
+        .log-entry.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left-color: #66bb6a;
+        }
+
+        .log-entry .time {
+            color: #999;
+            font-size: 0.9em;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .no-logs {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Система Доступу</h1>
+        <p class="subtitle">JWT токени валідні протягом 2 хвилин</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('registration')">Реєстрація</button>
+            <button class="tab" onclick="switchTab('auth')">Вхід</button>
+            <button class="tab" onclick="switchTab('logs')">Логи</button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <!-- Registration View -->
+        <div id="registrationView" class="view active">
+            <div class="form-group">
+                <label for="login">Логін:</label>
+                <input type="text" id="login" name="login">
+                <div class="error" id="loginError">Логін повинен містити мінімум 5 символів</div>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Ім'я:</label>
+                <input type="text" id="name" name="name">
+                <div class="error" id="nameError">Ім'я повинно містити лише літери</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Електронна пошта:</label>
+                <input type="email" id="email" name="email">
+                <div class="error" id="emailError">Пошта має містити символ @ та доменне ім'я</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password">
+                <div class="error" id="passwordError">Пароль повинен містити мінімум 8 символів, хоча б одну велику літеру та цифру</div>
+            </div>
+
+            <div class="form-group">
+                <label for="birthdate">Дата народження:</label>
+                <input type="date" id="birthdate" name="birthdate">
+                <div class="error" id="birthdateError">Введіть коректну дату (не в майбутньому)</div>
+            </div>
+
+            <button onclick="handleRegistration()">Зареєструватися</button>
+        </div>
+
+        <!-- Authentication View -->
+        <div id="authView" class="view">
+            <div id="loginSection">
+                <h3 style="margin-bottom: 20px; color: #555;">Вхід за обліковими даними</h3>
+                
+                <div class="form-group">
+                    <label for="authUsername">Логін:</label>
+                    <input type="text" id="authUsername" placeholder="Введіть логін">
+                </div>
+
+                <div class="form-group">
+                    <label for="authPassword">Пароль:</label>
+                    <input type="password" id="authPassword" placeholder="Введіть пароль">
+                </div>
+
+                <button onclick="handleLogin()">Увійти</button>
+                <div style="text-align: right; margin-top: 5px;">
+                    <button class="btn-link" onclick="switchTab('forgotPassword')">Забули пароль?</button>
+                </div>
+
+                <div class="divider"><span>АБО</span></div>
+
+                <h3 style="margin-bottom: 20px; color: #555;">Вхід за токеном</h3>
+                
+                <div class="form-group">
+                    <label for="tokenInput">JWT Токен:</label>
+                    <input type="text" id="tokenInput" placeholder="Вставте токен">
+                </div>
+
+                <button onclick="handleTokenAuth()">Автентифікуватися</button>
+
+                <div class="test-credentials">
+                    <strong>Зареєстровані користувачі:</strong>
+                    <div id="registeredUsers">
+                        <p style="color: #999; font-style: italic;">Немає зареєстрованих користувачів</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="authenticatedSection" style="display: none;">
+                <div class="authenticated-section">
+                    <div class="success-icon">✓</div>
+                    <h2 style="color: #333; margin-bottom: 10px;">Успішно автентифіковано!</h2>
+                    <p style="color: #666;">Вітаємо, <strong id="displayUsername"></strong></p>
+
+                    <!-- Profile Edit Section -->
+                    <div class="edit-profile-section">
+                        <h3 style="color: #d81b60; font-size: 16px; margin-bottom: 10px;">Зміна даних</h3>
+                        <div class="form-group">
+                            <label for="newNameInput">Змінити ім'я:</label>
+                            <input type="text" id="newNameInput" placeholder="Нове ім'я">
+                            <div class="error" id="newNameError">Ім'я повинно містити лише літери</div>
+                        </div>
+                        <button onclick="handleChangeName()" style="background: linear-gradient(135deg, #ab47bc 0%, #8e24aa 100%);">Зберегти нове ім'я</button>
+                    </div>
+
+                    <div class="token-info">
+                        <h3>Інформація про токен:</h3>
+                        <label>JWT Токен:</label>
+                        <div class="token-display" id="tokenDisplay"></div>
+                        <div class="timer-display">
+                            <span style="color: #666;">Час до закінчення:</span>
+                            <span class="timer-value" id="timerDisplay">2:00</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-secondary" onclick="copyToken()">Копіювати токен</button>
+                    <button class="btn-gray" onclick="switchTab('logs')">Переглянути логи</button>
+                    <button class="btn-danger" onclick="handleLogout()">Вийти</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forgot Password View -->
+        <div id="forgotPasswordView" class="view">
+            <h2 style="margin-bottom: 15px; text-align: center; color: #555;">Відновлення доступу</h2>
+            <p style="text-align: center; color: #777; margin-bottom: 20px;">Введіть ваш логін та пошту для відновлення паролю</p>
+
+            <div class="form-group">
+                <label for="recoveryLogin">Логін:</label>
+                <input type="text" id="recoveryLogin" placeholder="Ваш логін">
+            </div>
+
+            <div class="form-group">
+                <label for="recoveryEmail">Електронна пошта:</label>
+                <input type="email" id="recoveryEmail" placeholder="Ваша пошта">
+            </div>
+
+            <button onclick="handlePasswordRecovery()">Відновити пароль</button>
+            <button class="btn-gray" onclick="switchTab('auth')">Назад до входу</button>
+        </div>
+
+        <!-- Logs View -->
+        <div id="logsView" class="view">
+            <h2 style="margin-bottom: 20px; color: #555;">Системні логи</h2>
+            <div class="logs-container" id="logsContainer">
+                <div class="no-logs">Немає записів у логах</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // База даних користувачів
+        let usersDB = {};
+        // Логи тепер зберігають об'єкти { timestamp, message, type }
+        let authLogs = [];
+        let currentToken = '';
+        let currentUserLogin = ''; // Зберігаємо логін поточного користувача
+        let tokenExpiry = null;
+        let timerInterval = null;
+        const JWT_SECRET = 'your-secret-key-change-in-production';
+
+        // Валідація форми реєстрації
+        function validateLogin() {
+            const login = document.getElementById('login').value.trim();
+            const loginError = document.getElementById('loginError');
+            const loginInput = document.getElementById('login');
+            
+            if (login.length < 5) {
+                loginInput.classList.add('invalid');
+                loginInput.classList.remove('valid');
+                loginError.classList.add('show');
+                return false;
+            }
+            loginInput.classList.remove('invalid');
+            loginInput.classList.add('valid');
+            loginError.classList.remove('show');
+            return true;
+        }
+
+        function validateName(inputId = 'name', errorId = 'nameError') {
+            const nameInput = document.getElementById(inputId);
+            const name = nameInput.value.trim();
+            const nameError = document.getElementById(errorId);
+            const nameRegex = /^[a-zA-Zа-яА-ЯіІїЇєЄґҐ\s]+$/;
+            
+            if (!nameRegex.test(name) || name.length === 0) {
+                nameInput.classList.add('invalid');
+                nameInput.classList.remove('valid');
+                nameError.classList.add('show');
+                return false;
+            }
+            nameInput.classList.remove('invalid');
+            nameInput.classList.add('valid');
+            nameError.classList.remove('show');
+            return true;
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('email').value.trim();
+            const emailError = document.getElementById('emailError');
+            const emailInput = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email)) {
+                emailInput.classList.add('invalid');
+                emailInput.classList.remove('valid');
+                emailError.classList.add('show');
+                return false;
+            }
+            emailInput.classList.remove('invalid');
+            emailInput.classList.add('valid');
+            emailError.classList.remove('show');
+            return true;
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const passwordError = document.getElementById('passwordError');
+            const passwordInput = document.getElementById('password');
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasDigit = /\d/.test(password);
+            const isLongEnough = password.length >= 8;
+
+            if (!hasUpperCase || !hasDigit || !isLongEnough) {
+                passwordInput.classList.add('invalid');
+                passwordInput.classList.remove('valid');
+                passwordError.classList.add('show');
+                return false;
+            }
+            passwordInput.classList.remove('invalid');
+            passwordInput.classList.add('valid');
+            passwordError.classList.remove('show');
+            return true;
+        }
+
+        function validateBirthdate() {
+            const birthdate = new Date(document.getElementById('birthdate').value);
+            const birthdateError = document.getElementById('birthdateError');
+            const birthdateInput = document.getElementById('birthdate');
+            const today = new Date();
+            
+            if (!document.getElementById('birthdate').value || birthdate > today) {
+                birthdateInput.classList.add('invalid');
+                birthdateInput.classList.remove('valid');
+                birthdateError.classList.add('show');
+                return false;
+            }
+            birthdateInput.classList.remove('invalid');
+            birthdateInput.classList.add('valid');
+            birthdateError.classList.remove('show');
+            return true;
+        }
+
+        // Обробка реєстрації
+        function handleRegistration() {
+            const isLoginValid = validateLogin();
+            const isNameValid = validateName();
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            const isBirthdateValid = validateBirthdate();
+
+            if (isLoginValid && isNameValid && isEmailValid && isPasswordValid && isBirthdateValid) {
+                const login = document.getElementById('login').value.trim();
+                const password = document.getElementById('password').value;
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+
+                if (usersDB[login]) {
+                    showMessage('Користувач з таким логіном вже існує!', 'error');
+                    return;
+                }
+
+                usersDB[login] = { password, name, email };
+                showMessage('Вітаю, ви успішно зареєструвалися! Всі дані валідні.', 'success');
+                logSystemEvent(`Реєстрація нового користувача: ${login}`, 'success');
+
+                // Очистка форми
+                document.getElementById('login').value = '';
+                document.getElementById('name').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('birthdate').value = '';
+                
+                document.querySelectorAll('input').forEach(input => {
+                    input.classList.remove('valid', 'invalid');
+                });
+                document.querySelectorAll('.error').forEach(error => {
+                    error.classList.remove('show');
+                });
+
+                updateRegisteredUsers();
+                // Автоматичне перемикання на вкладку входу
+                setTimeout(() => switchTab('auth'), 1500);
+            }
+        }
+
+        function updateRegisteredUsers() {
+            const usersContainer = document.getElementById('registeredUsers');
+            const usersList = Object.keys(usersDB);
+            
+            if (usersList.length === 0) {
+                usersContainer.innerHTML = '<p style="color: #999; font-style: italic;">Немає зареєстрованих користувачів</p>';
+            } else {
+                // Оновлений вивід з акцентом на Ім'я
+                usersContainer.innerHTML = usersList.map(username => 
+                    `<div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed #eee;">
+                        <div style="font-weight: 600; color: #d81b60;">${usersDB[username].name} <span style="color: #666; font-weight: normal; font-size: 0.9em;">(${username})</span></div>
+                        <div style="font-size: 0.85em; color: #888;">${usersDB[username].email}</div>
+                    </div>`
+                ).join('');
+            }
+        }
+
+        // JWT функції з підтримкою UTF-8
+        function base64UrlEncode(str) {
+            return btoa(unescape(encodeURIComponent(str)))
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=/g, '');
+        }
+
+        function base64UrlDecode(str) {
+            try {
+                return decodeURIComponent(escape(atob(str.replace(/-/g, '+').replace(/_/g, '/'))));
+            } catch (e) {
+                console.error("Decoding error:", e);
+                return null;
+            }
+        }
+
+        function createJWT(payload) {
+            const header = { alg: 'HS256', typ: 'JWT' };
+            const encodedHeader = base64UrlEncode(JSON.stringify(header));
+            const encodedPayload = base64UrlEncode(JSON.stringify(payload));
+            const signature = base64UrlEncode(JWT_SECRET + encodedHeader + encodedPayload);
+            return `${encodedHeader}.${encodedPayload}.${signature}`;
+        }
+
+        function decodeJWT(token) {
+            try {
+                const parts = token.split('.');
+                if (parts.length !== 3) return null;
+                const jsonStr = base64UrlDecode(parts[1]);
+                return jsonStr ? JSON.parse(jsonStr) : null;
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
+
+        function validateJWT(token) {
+            try {
+                const parts = token.split('.');
+                if (parts.length !== 3) {
+                    logSystemEvent('Invalid token format', 'error');
+                    return { valid: false, reason: 'Невірний формат токену' };
+                }
+                
+                const payload = decodeJWT(token);
+                if (!payload) {
+                    logSystemEvent('Token decode failed', 'error');
+                    return { valid: false, reason: 'Не вдалося декодувати токен' };
+                }
+                
+                const now = Math.floor(Date.now() / 1000);
+                if (payload.exp < now) {
+                    logSystemEvent(`Token expired at ${new Date(payload.exp * 1000).toLocaleString()}`, 'error');
+                    return { valid: false, reason: 'Токен прострочений' };
+                }
+                
+                const encodedHeader = parts[0];
+                const encodedPayload = parts[1];
+                const expectedSignature = base64UrlEncode(JWT_SECRET + encodedHeader + encodedPayload);
+                
+                if (parts[2] !== expectedSignature) {
+                    logSystemEvent('Invalid signature', 'error');
+                    return { valid: false, reason: 'Невірний підпис токену' };
+                }
+                
+                return { valid: true, payload };
+            } catch (error) {
+                logSystemEvent(`Validation error: ${error.message}`, 'error');
+                return { valid: false, reason: 'Помилка валідації токену' };
+            }
+        }
+
+        // Система логування
+        function logSystemEvent(message, type = 'info') {
+            const timestamp = new Date().toLocaleString('uk-UA');
+            const logEntry = { timestamp, message, type };
+            
+            console.log(`[${type.toUpperCase()}] ${message}`);
+            authLogs.push(logEntry);
+            if(authLogs.length > 50) authLogs.shift();
+            updateLogsDisplay();
+        }
+
+        function updateLogsDisplay() {
+            const logsContainer = document.getElementById('logsContainer');
+            if (authLogs.length === 0) {
+                logsContainer.innerHTML = '<div class="no-logs">Немає записів у логах</div>';
+            } else {
+                // Відображаємо нові зверху
+                logsContainer.innerHTML = authLogs.slice().reverse().map(log => 
+                    `<div class="log-entry ${log.type}">
+                        <span class="time">${log.timestamp}</span>
+                        ${log.message}
+                    </div>`
+                ).join('');
+            }
+        }
+
+        // Аутентифікація
+        function handleLogin() {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value;
+
+            if (!username || !password) {
+                showMessage('Будь ласка, заповніть всі поля', 'error');
+                return;
+            }
+
+            if (usersDB[username] && usersDB[username].password === password) {
+                const now = Math.floor(Date.now() / 1000);
+                const exp = now + 120;
+                
+                const userData = usersDB[username];
+                
+                const payload = { username, name: userData.name, iat: now, exp };
+                const token = createJWT(payload);
+                
+                logSystemEvent(`Успішний вхід: ${username}`, 'success');
+                authenticateUser(token, username, exp);
+                showMessage('Успішна аутентифікація! Токен видано.', 'success');
+            } else {
+                logSystemEvent(`Невдала спроба входу: ${username}`, 'error');
+                showMessage('Невірний логін або пароль!', 'error');
+            }
+        }
+
+        function handleTokenAuth() {
+            const token = document.getElementById('tokenInput').value.trim();
+
+            if (!token) {
+                showMessage('Будь ласка, введіть токен', 'error');
+                return;
+            }
+
+            const validation = validateJWT(token);
+
+            if (validation.valid) {
+                logSystemEvent(`Успішний вхід за токеном: ${validation.payload.username}`, 'success');
+                authenticateUser(token, validation.payload.username, validation.payload.exp);
+                showMessage('Токен валідний! Ви автентифіковані.', 'success');
+            } else {
+                showMessage(validation.reason, 'error');
+            }
+        }
+
+        function authenticateUser(token, username, expiry) {
+            currentToken = token;
+            tokenExpiry = expiry;
+            currentUserLogin = username;
+
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('authenticatedSection').style.display = 'block';
+            
+            const displayName = usersDB[username] ? usersDB[username].name : username;
+            document.getElementById('displayUsername').textContent = displayName;
+            
+            document.getElementById('tokenDisplay').textContent = token;
+
+            document.getElementById('authUsername').value = '';
+            document.getElementById('authPassword').value = '';
+            document.getElementById('tokenInput').value = '';
+
+            startTimer();
+        }
+
+        // Логіка відновлення паролю
+        function handlePasswordRecovery() {
+            const login = document.getElementById('recoveryLogin').value.trim();
+            const email = document.getElementById('recoveryEmail').value.trim();
+
+            if (!login || !email) {
+                showMessage('Заповніть обидва поля', 'error');
+                return;
+            }
+
+            if (usersDB[login] && usersDB[login].email === email) {
+                showMessage(`Успіх! Ваш пароль: ${usersDB[login].password}`, 'success');
+                logSystemEvent(`Відновлення паролю для: ${login}`, 'success');
+            } else {
+                showMessage('Користувача з такими даними не знайдено', 'error');
+                logSystemEvent(`Спроба відновлення (невдала): ${login} / ${email}`, 'error');
+            }
+        }
+
+        // Логіка зміни імені
+        function handleChangeName() {
+            const newName = document.getElementById('newNameInput').value.trim();
+            
+            if (validateName('newNameInput', 'newNameError')) {
+                const oldName = usersDB[currentUserLogin].name;
+                
+                // Оновлюємо в базі
+                if (usersDB[currentUserLogin]) {
+                    usersDB[currentUserLogin].name = newName;
+                }
+                
+                // Оновлюємо UI
+                document.getElementById('displayUsername').textContent = newName;
+                showMessage('Ім\'я успішно змінено!', 'success');
+                logSystemEvent(`Зміна імені (${currentUserLogin}): ${oldName} -> ${newName}`, 'success');
+                
+                // КРИТИЧНО: Оновлюємо список зареєстрованих користувачів
+                updateRegisteredUsers();
+
+                // Оновлюємо токен з новим іменем
+                const now = Math.floor(Date.now() / 1000);
+                const payload = { username: currentUserLogin, name: newName, iat: now, exp: tokenExpiry };
+                const newToken = createJWT(payload);
+                currentToken = newToken;
+                document.getElementById('tokenDisplay').textContent = newToken;
+                
+                document.getElementById('newNameInput').value = '';
+                document.getElementById('newNameInput').classList.remove('valid');
+            }
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                const now = Math.floor(Date.now() / 1000);
+                const remaining = tokenExpiry - now;
+
+                if (remaining <= 0) {
+                    showMessage('Токен прострочений! Будь ласка, увійдіть знову.', 'error');
+                    handleLogout();
+                    return;
+                }
+
+                const minutes = Math.floor(remaining / 60);
+                const seconds = remaining % 60;
+                document.getElementById('timerDisplay').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function handleLogout() {
+            if (currentUserLogin) {
+                logSystemEvent(`Вихід з системи: ${currentUserLogin}`, 'success');
+            }
+            if (timerInterval) clearInterval(timerInterval);
+            currentToken = '';
+            tokenExpiry = null;
+            currentUserLogin = '';
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('authenticatedSection').style.display = 'none';
+            document.getElementById('timerDisplay').textContent = '2:00';
+            showMessage('Ви вийшли з системи', 'success');
+        }
+
+        function copyToken() {
+            navigator.clipboard.writeText(currentToken).then(() => {
+                showMessage('Токен скопійовано!', 'success');
+            }).catch(() => {
+                showMessage('Не вдалося скопіювати токен', 'error');
+            });
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+
+            if (tab === 'registration') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('registrationView').classList.add('active');
+            } else if (tab === 'auth') {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('authView').classList.add('active');
+            } else if (tab === 'logs') {
+                document.querySelectorAll('.tab')[2].classList.add('active');
+                document.getElementById('logsView').classList.add('active');
+                updateLogsDisplay(); // Оновлюємо при відкритті вкладки
+            } else if (tab === 'forgotPassword') {
+                // Спеціальний випадок, не підсвічуємо вкладки
+                document.getElementById('forgotPasswordView').classList.add('active');
+            }
+        }
+
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type} show`;
+            setTimeout(() => messageEl.classList.remove('show'), 5000);
+        }
+
+        // Події валідації в реальному часі
+        document.getElementById('login').addEventListener('blur', validateLogin);
+        document.getElementById('name').addEventListener('blur', () => validateName('name', 'nameError'));
+        document.getElementById('email').addEventListener('blur', validateEmail);
+        document.getElementById('password').addEventListener('blur', validatePassword);
+        document.getElementById('birthdate').addEventListener('blur', validateBirthdate);
+        
+        // Валідація нового імені
+        document.getElementById('newNameInput').addEventListener('input', () => validateName('newNameInput', 'newNameError'));
+
+        // Enter для входу
+        document.getElementById('authPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleLogin();
+        });
+        document.getElementById('tokenInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleTokenAuth();
+        });
+    </script>
+</body>
+</html>
